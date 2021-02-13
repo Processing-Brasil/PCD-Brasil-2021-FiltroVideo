@@ -6,7 +6,9 @@ int precisao = 1;
 
 void setup() {
   size(854, 480);
+  frameRate(30); // ajustar esse parâmetro
   mov = new Movie(this, "teste.mp4");
+  mov.frameRate(30); // ajustar esse parâmetro
   mov.loop();
   
   noFill();
@@ -36,4 +38,5 @@ void draw() {
       endShape();
     }
   }
+  saveFrame("################.png");
 }
