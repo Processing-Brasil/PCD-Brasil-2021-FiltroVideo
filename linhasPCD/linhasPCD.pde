@@ -3,13 +3,14 @@ import processing.video.*;
 int vEspaco = 10;
 Movie mov;
 int precisao = 1;
+int frame = 1;
 
 void setup() {
   size(854, 480);
-  frameRate(30); // ajustar esse parâmetro
   mov = new Movie(this, "teste.mp4");
-  mov.frameRate(30); // ajustar esse parâmetro
-  mov.loop();
+  mov.play();
+  mov.jump(0);
+  mov.pause();
   
   noFill();
   stroke((#ff666c));
@@ -17,6 +18,9 @@ void setup() {
 
 void draw() {
   background((#004aa3));
+  if (frame >= getLength()) return;//acabou
+  setFrame(frame);
+  
   if (mov.available() == true) {
     mov.read();
     mov.loadPixels();
@@ -37,6 +41,42 @@ void draw() {
       }
       endShape();
     }
+    frame++;
+    saveFrame("################.png");
   }
-  saveFrame("################.png");
+  text(getFrame() + " / " + (getLength() - 1), 10, 30);
 }
+
+
+//ref:
+//https://github.com/processing/processing-video/blob/master/examples/Movie/Frames/Frames.pde
+void movieEvent(Movie m) {
+  m.read();
+}
+
+int getLength() {
+  return int(mov.duration() * mov.frameRate);
+}
+
+int getFrame() {    
+  return ceil(mov.time() * 30) - 1;
+}
+
+void setFrame(int n) {
+  mov.play();
+    
+  // The duration of a single frame:
+  float frameDuration = 1.0 / mov.frameRate;
+    
+  // We move to the middle of the frame by adding 0.5:
+  float where = (n + 0.5) * frameDuration; 
+    
+  // Taking into account border effects:
+  float diff = mov.duration() - where;
+  if (diff < 0) {
+    where += diff - 0.25 * frameDuration;
+  }
+    
+  mov.jump(where);
+  mov.pause();  
+}  
