@@ -9,7 +9,10 @@ color paleta[] = new color[3];
 
 void setup() {
   size(854, 480);
+  frameRate(30); // ajustar esse parâmetro
   mov = new Movie(this, "teste.mp4");
+  mov.frameRate(30); // ajustar esse parâme
+  tro
   mov.loop();
   movColors = new color[width * height];
   paleta[0] = (#004aa3);
@@ -45,4 +48,5 @@ void draw() {
     }
     endShape();
   }
+  saveFrame("################.png");
 }
