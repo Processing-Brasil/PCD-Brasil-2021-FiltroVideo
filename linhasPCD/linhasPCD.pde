@@ -1,9 +1,14 @@
 import processing.video.*;
+import com.hamoid.*;
 
 int vEspaco = 10;
-Movie mov;
 int precisao = 1;
 int frame = 1;
+Movie mov;
+
+//ref:
+//https://funprogramming.org/VideoExport-for-Processing/
+VideoExport videoExport;
 
 void setup() {
   size(854, 480);
@@ -12,13 +17,21 @@ void setup() {
   mov.jump(0);
   mov.pause();
   
+  videoExport = new VideoExport(this, "data/exportado.mp4");
+  videoExport.setFrameRate(mov.frameRate);
+  videoExport.startMovie();
+  
   noFill();
   stroke((#ff666c));
 }
 
 void draw() {
   background((#004aa3));
-  if (frame >= getLength()) return;//acabou
+  if (frame >= getLength()) {
+    //acabou
+    videoExport.endMovie();
+    return;
+  }
   setFrame(frame);
   
   if (mov.available() == true) {
@@ -42,11 +55,17 @@ void draw() {
       endShape();
     }
     frame++;
-    saveFrame("################.png");
+    videoExport.saveFrame();
   }
   text(getFrame() + " / " + (getLength() - 1), 10, 30);
 }
 
+void keyPressed() {
+  if (key == 'q') {
+    videoExport.endMovie();
+    exit();
+  }
+}
 
 //ref:
 //https://github.com/processing/processing-video/blob/master/examples/Movie/Frames/Frames.pde
