@@ -1,6 +1,6 @@
 import processing.video.*;
 
-int vEspaco = 20;
+int vEspaco = 10;
 Movie mov;
 int precisao = 1;
 
@@ -32,8 +32,8 @@ void draw() {
         float b = blue(col);
         float intensidade = (r + g + b) / 765;
         vertex(x, y + sin(fase-intensidade)*vEspaco/2);
-        x += precisao / (intensidade + 0.01) / 20;
-        fase +=0.01;
+        x += precisao / (intensidade + 0.01) / 5;
+        fase += 0.5;
       }
       endShape();
     }
