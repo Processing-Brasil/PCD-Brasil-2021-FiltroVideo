@@ -11,7 +11,7 @@ Movie mov;
 VideoExport videoExport;
 
 void setup() {
-  size(854, 480);
+  size(1920, 1080);
   mov = new Movie(this, "teste.mp4");
   mov.play();
   mov.jump(0);
@@ -20,44 +20,67 @@ void setup() {
   videoExport = new VideoExport(this, "data/exportado.mp4");
   videoExport.setFrameRate(mov.frameRate);
   videoExport.startMovie();
-  
-  noFill();
-  stroke((#ff666c));
 }
 
 void draw() {
-  background((#004aa3));
   if (frame >= getLength()) {
     //acabou
     videoExport.endMovie();
-    return;
+    exit();
   }
+  
   setFrame(frame);
   
   if (mov.available() == true) {
     mov.read();
     mov.loadPixels();
     
+    float zoom = max((float)width/(float)mov.width, (float)height/(float)mov.height);
+    scale(zoom);
+    
+    background(#004aa3);
+    noFill();
+    
+    //ondas
+    stroke(#ff666c);
+    for (int y = -vEspaco; y < mov.height + vEspaco; y += vEspaco * 2) {
+      float comprimento = 0;
+      beginShape();
+      for (int x = 0; x < mov.width; x += 2) {
+        float y_sin = sin(comprimento + frame/10.0) * vEspaco *2 + y;
+        vertex(x, y_sin);
+        comprimento += 0.1;
+      }
+      endShape();
+    }
+
+    //video em frequencias
+    stroke(#e6e6d8);
     float fase = 0;
-    for (int y = 0; y < height; y+=vEspaco) {
+    for (int y = 0; y < mov.height; y+=vEspaco) {
       float x = 0;
       beginShape();
-      while (x < width) {
+      while (x < mov.width) {
         color col = mov.get(floor(x), y);
         float r = red(col);
         float g = green(col);
         float b = blue(col);
         float intensidade = (r + g + b) / 765;
-        vertex(x, y + sin(fase-intensidade)*vEspaco/2);
+        vertex(x, y + sin(fase-intensidade)*vEspaco/2+vEspaco/2);
         x += precisao / (intensidade + 0.01) / 5;
         fase += 0.5;
       }
       endShape();
     }
-    frame++;
+    
     videoExport.saveFrame();
+  
+    frame++;
+    
+    fill(#004aa3);
+    textSize(100);
+    text(getFrame() + " / " + (getLength() - 1), 10, 100);
   }
-  text(getFrame() + " / " + (getLength() - 1), 10, 30);
 }
 
 void keyPressed() {
