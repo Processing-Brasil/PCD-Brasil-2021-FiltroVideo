@@ -2,7 +2,7 @@ import processing.video.*;
 import com.hamoid.*;
 
 int vEspaco = 10;
-int precisao = 1;
+float precisao = 1;
 int frame = 1;
 Movie mov;
 
@@ -12,7 +12,7 @@ VideoExport videoExport;
 
 void setup() {
   size(1920, 1080);
-  mov = new Movie(this, "teste.mp4");
+  mov = new Movie(this, "montagem-depoimentos-pcd2021-alto-contraste-baixa.mp4");
   mov.play();
   mov.jump(0);
   mov.pause();
@@ -20,6 +20,7 @@ void setup() {
   videoExport = new VideoExport(this, "data/exportado.mp4");
   videoExport.setFrameRate(mov.frameRate);
   videoExport.startMovie();
+  
 }
 
 void draw() {
@@ -38,7 +39,7 @@ void draw() {
     float zoom = max((float)width/(float)mov.width, (float)height/(float)mov.height);
     scale(zoom);
     
-    background(#004aa3);
+    background(#e6e6d8);
     noFill();
     
     //ondas
@@ -55,22 +56,29 @@ void draw() {
     }
 
     //video em frequencias
-    stroke(#e6e6d8);
+    
     float fase = 0;
     for (int y = 0; y < mov.height; y+=vEspaco) {
       float x = 0;
+      
+      noFill();
+      stroke(#004aa3);
+      strokeWeight(1);
       beginShape();
       while (x < mov.width) {
         color col = mov.get(floor(x), y);
         float r = red(col);
         float g = green(col);
         float b = blue(col);
-        float intensidade = (r + g + b) / 765;
-        vertex(x, y + sin(fase-intensidade)*vEspaco/2+vEspaco/2);
+        float intensidade = 1-((r + g + b) / 765);
+        float _y = y + sin(fase-intensidade)*vEspaco/2+vEspaco/2;
+        
+        vertex(x, _y);
         x += precisao / (intensidade + 0.01) / 5;
         fase += 0.5;
       }
       endShape();
+      
     }
     
     videoExport.saveFrame();
