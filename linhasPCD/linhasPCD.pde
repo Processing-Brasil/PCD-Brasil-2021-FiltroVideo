@@ -11,8 +11,7 @@ void setup() {
   size(854, 480);
   frameRate(30); // ajustar esse parâmetro
   mov = new Movie(this, "teste.mp4");
-  mov.frameRate(30); // ajustar esse parâme
-  tro
+  mov.frameRate(30); // ajustar esse parâmetro
   mov.loop();
   movColors = new color[width * height];
   paleta[0] = (#004aa3);
