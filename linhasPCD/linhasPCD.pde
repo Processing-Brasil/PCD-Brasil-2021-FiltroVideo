@@ -60,6 +60,7 @@ void draw() {
     float fase = 0;
     for (int y = 0; y < mov.height; y+=vEspaco) {
       float x = 0;
+      float _y = y;
       
       noFill();
       stroke(#004aa3);
@@ -71,12 +72,13 @@ void draw() {
         float g = green(col);
         float b = blue(col);
         float intensidade = 1-((r + g + b) / 765);
-        float _y = y + sin(fase-intensidade)*vEspaco/2+vEspaco/2;
+        _y = y + sin(fase-intensidade)*vEspaco/2+vEspaco/2;
         
         vertex(x, _y);
         x += precisao / (intensidade + 0.01) / 5;
         fase += 0.5;
       }
+      vertex(mov.width, _y);
       endShape();
       
     }
