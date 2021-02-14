@@ -105,9 +105,6 @@ void keyPressed() {
 
 //ref:
 //https://github.com/processing/processing-video/blob/master/examples/Movie/Frames/Frames.pde
-void movieEvent(Movie m) {
-  m.read();
-}
 
 int getLength() {
   return int(mov.duration() * mov.frameRate);
