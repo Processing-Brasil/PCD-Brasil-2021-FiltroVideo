@@ -21,6 +21,7 @@ void setup() {
   videoExport.setFrameRate(mov.frameRate);
   videoExport.startMovie();
   
+  noiseSeed(0);
 }
 
 void draw() {
@@ -42,13 +43,15 @@ void draw() {
     background(#e6e6d8);
     noFill();
     
+    float tempo = (float)frame / mov.frameRate * 3.0;
+    
     //ondas
     stroke(#ff666c);
     for (int y = -vEspaco; y < mov.height + vEspaco; y += vEspaco * 2) {
       float comprimento = 0;
       beginShape();
       for (int x = 0; x < mov.width; x += 2) {
-        float y_sin = sin(comprimento + frame/10.0) * vEspaco *2 + y;
+        float y_sin = sin(comprimento + tempo) * vEspaco * 2 + y;
         vertex(x, y_sin);
         comprimento += 0.1;
       }
@@ -57,10 +60,10 @@ void draw() {
 
     //video em frequencias
     
-    float fase = 0;
     for (int y = 0; y < mov.height; y+=vEspaco) {
       float x = 0;
       float _y = y;
+      float fase = noise(y) * TWO_PI;
       
       noFill();
       stroke(#004aa3);
@@ -71,8 +74,8 @@ void draw() {
         float r = red(col);
         float g = green(col);
         float b = blue(col);
-        float intensidade = 1-((r + g + b) / 765);
-        _y = y + sin(fase-intensidade)*vEspaco/2+vEspaco/2;
+        float intensidade = 1 - ((r + g + b) / 765);
+        _y = y + sin(fase - intensidade - tempo) * vEspaco / 2 + vEspaco / 2;
         
         vertex(x, _y);
         x += precisao / (intensidade + 0.01) / 5;
